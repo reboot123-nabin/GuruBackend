@@ -9,6 +9,7 @@ const verifyDonor=require('../middleware/auth');
 // const {auth}=require('../middleware/auth');
 
 const User = require("../model/userSchema");
+const Sponsor=require("../model/sponsorSchema");
 
 
 
@@ -52,6 +53,59 @@ try{
         console.log(err);
     }
 })
+
+
+
+
+
+router.post('/insert',async(req,res)=>{
+    const{cname,cnumber,month,year,supportfor,name,email,csc,country,address,date}=req.body;
+    if(!cname || !cnumber|| !month|| !year || !supportfor || !name || !email || !country|| !address || !date || !csc ){
+        return res.status(422).json({error:"please enter missing data value"});
+    }
+try{
+
+    // const userExist=await Sponsor.findOne({cname:cname});
+
+    // if(userExist){
+    //     return res.status(422).json({error:"name already exist"});
+    // }
+    const sponsor = await Sponsor.create({
+        cname,
+        cnumber,
+        month,
+        year,
+        supportfor,
+        name,
+        email,
+        country,
+        address,
+        date,
+        csc
+    });
+
+    res.status(200).json({
+        success:true,
+        sponsor,
+        mesage:"KYC register!"
+    })
+    // const user=new User({name,email,address,password,country,sponsor})
+    
+    // console.log(user);
+    // await user.save();
+    // res.status(201).json({message:"user registered successfully"});
+}
+    catch(err){
+        console.log(err);
+    }
+})
+
+
+
+
+
+
+
 
 router.post('/logout',async(req,res,next)=>{
     res.cookie("token", null,{
